@@ -1,0 +1,92 @@
+#Angel Gonzalez Gonzalez
+#71468965F
+#Docker-yml for the creation of docker
+
+version: "3.3"
+services:
+  fw:
+    image: bin/fw
+    build: ./fw
+    container_name: fw
+    networks:
+      external-network:
+        priority: 3
+        ipv4_address: 10.5.0.1
+      DMZ:
+        priority: 2
+        ipv4_address: 10.5.1.1
+      internal-network:
+        priority: 1
+        ipv4_address: 10.5.2.1
+    privileged: true
+    tty: true
+
+  external:
+    image: bin/external
+    build: ./external
+    container_name: external
+    networks:
+      external-network:
+        ipv4_address: 10.5.0.20
+    depends_on:
+      - fw
+    privileged: true
+    tty: true
+
+  dmz: 
+    image: bin/dmz
+    build: ./dmz
+    container_name: dmz
+    networks:
+      DMZ:
+        ipv4_address: 10.5.1.20
+    depends_on:
+      - fw
+    privileged: true
+    tty: true
+
+  internal1:
+    image: bin/internal1
+    build: ./internal1
+    container_name: internal1
+    networks:
+      internal-network:
+        ipv4_address: 10.5.2.20
+    depends_on:
+      - fw
+    privileged: true
+    tty: true
+
+  internal2:
+    image: bin/internal2
+    build: ./internal2
+    container_name: internal2
+    networks:
+      internal-network:
+        ipv4_address: 10.5.2.21
+    depends_on:
+      - fw
+    privileged: true
+    tty: true
+
+networks:
+  external-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 10.5.0.0/24
+          gateway: 10.5.0.254
+  
+  DMZ:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 10.5.1.0/24
+          gateway: 10.5.1.254
+
+  internal-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 10.5.2.0/24
+          gateway: 10.5.2.254
