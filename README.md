@@ -21,7 +21,15 @@ https://github.com/agonzg40/DMZ-SICO-con-optativas
 
 **Usuario utilizado en la práctica sin optativas:**
 
-root:root
+userAccess:enter
+pkey:enter
+
+**Consideraciones**
+-El puerto 22 no funciona, ya que las conexiones se redirijen al puerto 2222 por una optativa, en la práctica sin optativas, si que funciona.
+
+-En el caso de que el fail2ban de error, en la dmz ejecutar rm -r /var/run/fail2ban/fail2ban.sock, y lanzar el fail2ban de nuevo con service fail2ban start, o volver a ejecutar la máquina.
+
+-Si al hacer login con la pkey da problemas, ejecutar desde el lado de internal1 ssh-copy-id pkey@10.5.1.20
 
 ## Las salidas de los comandos ip address e ip route son las siguientes:
 
